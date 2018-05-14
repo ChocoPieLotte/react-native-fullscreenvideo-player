@@ -95,6 +95,7 @@ export default class VideoPlayer extends Component {
       isControlsVisible: !props.hideControlsOnStart,
       duration: 0,
       isSeeking: false,
+      currentTime: 0
     };
 
     this.seekBarWidth = 200;
@@ -155,6 +156,7 @@ export default class VideoPlayer extends Component {
     }
     this.setState({
       progress: event.currentTime / (this.props.duration || this.state.duration),
+      currentTime: event.currentTime
     });
   }
 
@@ -203,7 +205,7 @@ export default class VideoPlayer extends Component {
     if(Platform.OS === "android")
     {
       var uri = this.props.video.uri;
-      NativeModules.BridgeModule.showFullscreen(uri);
+      NativeModules.BridgeModule.showFullscreen(uri, this.state.currentTime * 1000);
     }
     else
     {
@@ -320,6 +322,7 @@ export default class VideoPlayer extends Component {
             customStyles.thumbnail,
           ]}
           source={thumbnail}
+          key="ImageThumbnail"
         />,
         <View
           style={{
@@ -331,6 +334,7 @@ export default class VideoPlayer extends Component {
             justifyContent: 'center',
             alignItems: 'center'
           }}
+          key="ButtonWrapper"
         >
           {this.renderStartButton()}
         </View>

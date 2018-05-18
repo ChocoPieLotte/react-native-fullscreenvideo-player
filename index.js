@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet, Image, TouchableOpacity, Platform, NativeModules } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, Platform, NativeModules, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Video from 'react-native-video';
 const styles = StyleSheet.create({
@@ -95,7 +95,9 @@ export default class VideoPlayer extends Component {
       isControlsVisible: !props.hideControlsOnStart,
       duration: 0,
       isSeeking: false,
-      currentTime: 0
+      currentTime: 0,
+      imageWidth: 0,
+      imageHeight: 0
     };
 
     this.seekBarWidth = 200;
@@ -122,6 +124,16 @@ export default class VideoPlayer extends Component {
     if (this.props.autoplay) {
       this.hideControls();
     }
+    Image.getSize( this.props.thumbnail.uri, ( width, height ) =>
+    {
+      if (height !== 0){
+      const ratio = height / width;
+      this.props.onImageSize(width, ratio * Dimensions.get('window').width);
+    }
+  },(errorMsg) =>
+  {
+        console.log( errorMsg );
+    });
   }
 
   componentWillUnmount() {
@@ -205,7 +217,7 @@ export default class VideoPlayer extends Component {
     if(Platform.OS === "android")
     {
       var uri = this.props.video.uri;
-      NativeModules.BridgeModule.showFullscreen(uri, this.state.currentTime * 1000);
+      NativeModules.BridgeModule.showFullscreen(uri, this.state.currentTime*1000);
     }
     else
     {
@@ -322,9 +334,10 @@ export default class VideoPlayer extends Component {
             customStyles.thumbnail,
           ]}
           source={thumbnail}
-          key="ImageThumbnail"
-        />,
-        <View
+          key={'thumbnailImage'}
+          />,
+          <View
+          key={'wrapperStarButton'}
           style={{
             position: 'absolute',
             top: 0,
@@ -334,7 +347,6 @@ export default class VideoPlayer extends Component {
             justifyContent: 'center',
             alignItems: 'center'
           }}
-          key="ButtonWrapper"
         >
           {this.renderStartButton()}
         </View>

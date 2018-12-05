@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     borderRadius: 32,
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'center',
   },
   playArrow: {
     color: 'white',
@@ -124,16 +125,16 @@ export default class VideoPlayer extends Component {
     if (this.props.autoplay) {
       this.hideControls();
     }
-//     Image.getSize( this.props.thumbnail.uri, ( width, height ) =>
-//     {
-//       if (height !== 0){
-//       const ratio = height / width;
-//       this.props.onImageSize(width, ratio * Dimensions.get('window').width);
-//     }
-//   },(errorMsg) =>
-//   {
-//         console.log( errorMsg );
-//     });
+  //   Image.getSize( this.props.thumbnail.uri, ( width, height ) =>
+  //   {
+  //     if (height !== 0){
+  //     const ratio = height / width;
+  //     this.props.onImageSize(width, ratio * Dimensions.get('window').width);
+  //   }
+  // },(errorMsg) =>
+  // {
+  //       console.log( errorMsg );
+  //   });
   }
 
   componentWillUnmount() {
@@ -217,7 +218,7 @@ export default class VideoPlayer extends Component {
     if(Platform.OS === "android")
     {
       var uri = this.props.video.uri;
-      NativeModules.BridgeModule.showFullscreen(uri, this.state.currentTime*1000);
+      NativeModules.BridgeModule.showFullscreen(uri, this.state.currentTime*1000 || 0);
     }
     else
     {
@@ -310,10 +311,10 @@ export default class VideoPlayer extends Component {
   }
 
   renderStartButton() {
-    const { customStyles } = this.props;
+    const { customStyles, videoHeight } = this.props;
     return (
       <TouchableOpacity
-        style={[styles.playButton, customStyles.playButton]}
+        style={[styles.playButton, customStyles.playButton, { marginBottom: videoHeight / 2 }]}
         onPress={this.onStartPress}
       >
         <Icon style={[styles.playArrow, customStyles.playArrow]} name="play-arrow" size={42} />
@@ -468,6 +469,7 @@ export default class VideoPlayer extends Component {
           ]}
         >
           <TouchableOpacity style={styles.overlayButton} onPress={this.showControls} />
+          {(!this.state.isPlaying) && this.renderStartButton()}
         </View>
         {((!this.state.isPlaying) || this.state.isControlsVisible)
           ? this.renderControls() : this.renderSeekBar(true)}
@@ -479,15 +481,15 @@ export default class VideoPlayer extends Component {
     const { thumbnail, style } = this.props;
     const { isStarted } = this.state;
 
-    if (!isStarted && thumbnail) {
-      return this.renderThumbnail();
-    } else if (!isStarted) {
-      return (
-        <View style={[styles.preloadingPlaceholder, this.getSizeStyles(), style]}>
-          {this.renderStartButton()}
-        </View>
-      );
-    }
+    // if (!isStarted && thumbnail) {
+    //   return this.renderThumbnail();
+    // } else if (!isStarted) {
+    //   return (
+    //     <View style={[styles.preloadingPlaceholder, this.getSizeStyles(), style]}>
+    //       {this.renderStartButton()}
+    //     </View>
+    //   );
+    // }
     return this.renderVideo();
   }
 

@@ -124,16 +124,16 @@ export default class VideoPlayer extends Component {
     if (this.props.autoplay) {
       this.hideControls();
     }
-    Image.getSize( this.props.thumbnail.uri, ( width, height ) =>
-    {
-      if (height !== 0){
-      const ratio = height / width;
-      this.props.onImageSize(width, ratio * Dimensions.get('window').width);
-    }
-  },(errorMsg) =>
-  {
-        console.log( errorMsg );
-    });
+//     Image.getSize( this.props.thumbnail.uri, ( width, height ) =>
+//     {
+//       if (height !== 0){
+//       const ratio = height / width;
+//       this.props.onImageSize(width, ratio * Dimensions.get('window').width);
+//     }
+//   },(errorMsg) =>
+//   {
+//         console.log( errorMsg );
+//     });
   }
 
   componentWillUnmount() {

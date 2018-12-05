@@ -314,7 +314,7 @@ export default class VideoPlayer extends Component {
     const { customStyles, videoHeight } = this.props;
     return (
       <TouchableOpacity
-        style={[styles.playButton, customStyles.playButton, { marginBottom: videoHeight / 2 }]}
+        style={[styles.playButton, customStyles.playButton, { marginBottom: videoHeight / 2 - 32 }]}
         onPress={this.onStartPress}
       >
         <Icon style={[styles.playArrow, customStyles.playArrow]} name="play-arrow" size={42} />
